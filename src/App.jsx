@@ -2,6 +2,7 @@ import './App.css';
 import Square from './Square';
 
 function App() {
+
   return (
     <div className="App">
       <p className='section-title'>Tic Tac Toe</p>
