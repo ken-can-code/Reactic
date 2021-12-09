@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Square = (props) => {
   const handleClick = () => {
@@ -7,7 +7,12 @@ const Square = (props) => {
     setWhichTurn(whichTurn === 'O' ? 'X' : 'O');
   };
 
-  const [squareContent, setSquareContent] = useState('');
+  const { clearBoard, setClearBoard } = props;
+  const [ squareContent, setSquareContent ] = useState('');
+  useEffect(() => {
+    setSquareContent('');
+    setClearBoard(false);
+  }, [ clearBoard, setClearBoard ])
 
   return (
     <div className='board-square' onClick={handleClick}>
@@ -17,3 +22,16 @@ const Square = (props) => {
 }
 
 export default Square;
+
+
+
+
+// React {
+//   useState: function(whatever) {does something},
+//   useEffect: function(something) {does something else}
+// }
+
+// props {
+//   clearBoard: (the clearBoard state)
+//   setClearBoard: (the setClearBoard function)
+// }

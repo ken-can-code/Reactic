@@ -3,13 +3,18 @@ import React, { useState } from 'react';
 import Square from './Square';
 
 function App() {
-  const [whichTurn, setWhichTurn] = useState('O');
+  const [ whichTurn, setWhichTurn ] = useState('O');
+  const [ clearBoard, setClearBoard ] = useState(false);
 
   const squares = [];
   for (let i = 0; i < 9; i += 1) {
-    squares.push(<Square key={i} whichTurn={whichTurn} setWhichTurn={setWhichTurn} />)
+    squares.push(<Square key={i}
+      clearBoard={clearBoard}
+      setClearBoard={setClearBoard}
+      whichTurn={whichTurn}
+      setWhichTurn={setWhichTurn}
+    />)
   }
-  // console.log('Square array', squares);
 
   return (
     <div className="App">
@@ -31,7 +36,7 @@ function App() {
           Next move: <span id='current-turn'>{whichTurn}</span>
         </div>
         <div className='btn'>
-          <button id='clear'>Clear</button>
+          <button id='clear' onClick={ () => setClearBoard(true) }>Clear</button>
         </div>
       </div>
       <p className='under-text' id='click-or-tap'>

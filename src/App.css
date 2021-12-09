@@ -67,14 +67,15 @@
   text-align: center;
   font-family: "Courier New", Courier, monospaceMS;
   font-size: 30pt;
-  margin-right: 25px;
+  margin-left: 5px;
+  margin-right: 20px;
 }
 #next-message {
   flex: 1;
   font-family: didot;
   font-size: 18pt;
   text-align: right;
-  padding: 40px 0px 40px 0px;
+  padding: 40px 0px 40px 55px;
 }
 #clear {
   font-family: didot;
