@@ -5,10 +5,19 @@ import Square from './Square';
 function App() {
   const [ whichTurn, setWhichTurn ] = useState('O');
   const [ clearBoard, setClearBoard ] = useState(false);
+  const initialSquares = [];
+  for (let i = 0; i < 9; i += 1) {
+    initialSquares.push('');
+  }
+  const [ squaresContents, setSquaresContents ] = useState(initialSquares);
+  // initially, squaresContents === ['', '', '', '', '', '', '', '', '']
 
   const squares = [];
   for (let i = 0; i < 9; i += 1) {
     squares.push(<Square key={i}
+      id={i}
+      squaresContents={squaresContents}
+      setSquaresContents={setSquaresContents}
       clearBoard={clearBoard}
       setClearBoard={setClearBoard}
       whichTurn={whichTurn}
@@ -24,6 +33,7 @@ function App() {
         <div className='board-main'>
           <div className='board'>
            {squares.map((square) => square)}
+           {console.log('this is the squares', squares)}
           </div>
         </div>
         <div className='board-right'>

@@ -2,21 +2,31 @@ import React, { useState, useEffect } from 'react';
 
 const Square = (props) => {
   const handleClick = () => {
-    const { whichTurn, setWhichTurn } = props;
-    setSquareContent(whichTurn);
-    setWhichTurn(whichTurn === 'O' ? 'X' : 'O');
+    if (squaresContents[id] === '') {
+      const { whichTurn, setWhichTurn } = props;
+      const newSquaresContents = [];
+      for (let i = 0; i < 9; i += 1) {
+        if (id === i) {
+          newSquaresContents.push(whichTurn);
+        } else {
+          newSquaresContents.push(squaresContents[i]);
+        }
+      }
+      setSquaresContents(newSquaresContents);
+      setWhichTurn(whichTurn === 'O' ? 'X' : 'O');
+    }
   };
 
-  const { clearBoard, setClearBoard } = props;
-  const [ squareContent, setSquareContent ] = useState('');
+  const { squaresContents, setSquaresContents, clearBoard, setClearBoard, id } = props;
+
   useEffect(() => {
-    setSquareContent('');
+    setSquaresContents(['', '', '', '', '', '', '', '', '']);
     setClearBoard(false);
-  }, [ clearBoard, setClearBoard ])
+  }, [clearBoard, setClearBoard, setSquaresContents])
 
   return (
     <div className='board-square' onClick={handleClick}>
-      <div className='square-contents'>{squareContent}</div>
+      <div className='square-contents'>{squaresContents[id]}</div>
     </div>
   )
 }
