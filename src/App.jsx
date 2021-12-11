@@ -5,17 +5,18 @@ import Square from './Square';
 function App() {
   const [ whichTurn, setWhichTurn ] = useState('O');
   const [ clearBoard, setClearBoard ] = useState(false);
-  const initialSquares = [];
+  const blankBoardArary = [];
   for (let i = 0; i < 9; i += 1) {
-    initialSquares.push('');
+    blankBoardArary.push('');
   }
-  const [ squaresContents, setSquaresContents ] = useState(initialSquares);
+  const [ squaresContents, setSquaresContents ] = useState(blankBoardArary);
   // initially, squaresContents === ['', '', '', '', '', '', '', '', '']
 
   const squares = [];
   for (let i = 0; i < 9; i += 1) {
     squares.push(<Square key={i}
       id={i}
+      blankBoardArray={blankBoardArary}
       squaresContents={squaresContents}
       setSquaresContents={setSquaresContents}
       clearBoard={clearBoard}

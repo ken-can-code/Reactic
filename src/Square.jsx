@@ -17,12 +17,19 @@ const Square = (props) => {
     }
   };
 
-  const { squaresContents, setSquaresContents, clearBoard, setClearBoard, id } = props;
+  const {
+    blankBoardArray,
+    squaresContents,
+    setSquaresContents,
+    clearBoard,
+    setClearBoard,
+    id
+  } = props;
 
   useEffect(() => {
-    setSquaresContents(['', '', '', '', '', '', '', '', '']);
+    setSquaresContents(blankBoardArray);
     setClearBoard(false);
-  }, [clearBoard, setClearBoard, setSquaresContents])
+  }, [blankBoardArray, clearBoard, setClearBoard, setSquaresContents])
 
   return (
     <div className='board-square' onClick={handleClick}>
