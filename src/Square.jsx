@@ -1,7 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const Square = (props) => {
+  const {
+    numOfMoves,
+    setNumOfMoves,
+    squaresContents,
+    setSquaresContents,
+    clearBoard,
+    setClearBoard,
+    id
+  } = props;
+
   const handleClick = () => {
+    setNumOfMoves(numOfMoves + 1);
     if (squaresContents[id] === '') {
       const { whichTurn, setWhichTurn } = props;
       const newSquaresContents = [];
@@ -17,19 +28,15 @@ const Square = (props) => {
     }
   };
 
-  const {
-    blankBoardArray,
-    squaresContents,
-    setSquaresContents,
-    clearBoard,
-    setClearBoard,
-    id
-  } = props;
-
   useEffect(() => {
+    const blankBoardArray = [];
+    for (let i = 0; i < 9; i += 1) {
+      blankBoardArray.push('');
+    }
     setSquaresContents(blankBoardArray);
+    setNumOfMoves(0);
     setClearBoard(false);
-  }, [blankBoardArray, clearBoard, setClearBoard, setSquaresContents])
+  }, [clearBoard, setClearBoard, setNumOfMoves, setSquaresContents])
 
   return (
     <div className='board-square' onClick={handleClick}>

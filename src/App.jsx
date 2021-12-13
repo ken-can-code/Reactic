@@ -3,20 +3,29 @@ import React, { useState } from 'react';
 import Square from './Square';
 
 function App() {
+  const blankBoardArray = [];
+  for (let i = 0; i < 9; i += 1) {
+    blankBoardArray.push('');
+  }
+  const [ numOfMoves, setNumOfMoves ] = useState(0);
   const [ whichTurn, setWhichTurn ] = useState('O');
   const [ clearBoard, setClearBoard ] = useState(false);
-  const blankBoardArary = [];
-  for (let i = 0; i < 9; i += 1) {
-    blankBoardArary.push('');
-  }
-  const [ squaresContents, setSquaresContents ] = useState(blankBoardArary);
-  // initially, squaresContents === ['', '', '', '', '', '', '', '', '']
+  const [ squaresContents, setSquaresContents ] = useState(blankBoardArray);
+  // initially, squaresContents === 
+  // [ '', '', '',
+  //   '', '', '',
+  //   '', '', '' ]
+
+  const checkWin = () => {
+
+  };
 
   const squares = [];
   for (let i = 0; i < 9; i += 1) {
     squares.push(<Square key={i}
       id={i}
-      blankBoardArray={blankBoardArary}
+      numOfMoves={numOfMoves}
+      setNumOfMoves={setNumOfMoves}
       squaresContents={squaresContents}
       setSquaresContents={setSquaresContents}
       clearBoard={clearBoard}
