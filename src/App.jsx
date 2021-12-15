@@ -22,13 +22,18 @@ function App() {
   //   '', '', '' ]
 
   const checkWin = () => {
-
+    const rows = [0, 0, 0];          //* Individual indexes represent entire row
+    const columns = [0, 0, 0];       //** " " column
+    const rightDiagonal = [0, 0, 0]; //*** Diagonal indexes represent
+    const leftDiagonal = [0, 0, 0];  //    INDIVIDUAL BOXES
   };
 
   const squares = [];
   for (let i = 0; i < 9; i += 1) {
-    squares.push(<Square key={i}
+    squares.push(<Square
+      key={i}
       id={i}
+      coordinates={[Math.floor(i / 3), (i % 3)]}
       numOfMoves={numOfMoves}
       setNumOfMoves={setNumOfMoves}
       squaresContents={squaresContents}
