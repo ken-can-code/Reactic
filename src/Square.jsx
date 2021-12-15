@@ -12,8 +12,8 @@ const Square = (props) => {
   } = props;
 
   const handleClick = () => {
-    setNumOfMoves(numOfMoves + 1);
     if (squaresContents[id] === '') {
+      setNumOfMoves(numOfMoves + 1);
       const { whichTurn, setWhichTurn } = props;
       const newSquaresContents = [];
       for (let i = 0; i < 9; i += 1) {

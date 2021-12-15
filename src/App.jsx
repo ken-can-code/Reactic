@@ -1,13 +1,18 @@
 import './App.css';
 import React, { useState } from 'react';
 import Square from './Square';
+import { useEffect } from 'react/cjs/react.development';
 
 function App() {
+  const winArea = document.getElementById('win');
+  const bottomTextArea = document.getElementById('click-or-tap');
+  console.log('bottomTextArea', bottomTextArea);
   const blankBoardArray = [];
   for (let i = 0; i < 9; i += 1) {
     blankBoardArray.push('');
   }
   const [ numOfMoves, setNumOfMoves ] = useState(0);
+  const [ gameWon, setGameWon ] = useState(false);
   const [ whichTurn, setWhichTurn ] = useState('O');
   const [ clearBoard, setClearBoard ] = useState(false);
   const [ squaresContents, setSquaresContents ] = useState(blankBoardArray);
@@ -32,7 +37,24 @@ function App() {
       setClearBoard={setClearBoard}
       whichTurn={whichTurn}
       setWhichTurn={setWhichTurn}
+      checkWin={checkWin}
     />)
+  }
+
+  useEffect(() => {
+    if (numOfMoves === 9 || gameWon === true) { // this is essentially 'game complete'
+      bottomTextArea.textContent = 'Click or tap \'Clear\' to start a new game!'
+      // 1. disable all boxes handlers even if they are blank
+    }
+    if (numOfMoves === 9 && gameWon === false) {
+      winArea.textContent = 'It\'s a draw';
+    };
+  }, [bottomTextArea, gameWon, numOfMoves, winArea]);
+
+  const handleClear = () => {
+    setClearBoard(true);
+    winArea.textContent = '';
+    bottomTextArea.textContent = 'Click or tap on the above board to play a move!';
   }
 
   return (
@@ -56,7 +78,7 @@ function App() {
           Next move: <span id='current-turn'>{whichTurn}</span>
         </div>
         <div className='btn'>
-          <button id='clear' onClick={ () => setClearBoard(true) }>Clear</button>
+          <button id='clear' onClick={handleClear}>Clear</button>
         </div>
       </div>
       <p className='under-text' id='click-or-tap'>
