@@ -34,7 +34,6 @@ const Square = (props) => {
       blankBoardArray.push('');
     }
     setSquaresContents(blankBoardArray);
-    setNumOfMoves(0);
     setClearBoard(false);
   }, [clearBoard, setClearBoard, setNumOfMoves, setSquaresContents])
 

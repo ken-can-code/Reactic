@@ -1,12 +1,12 @@
 import './App.css';
 import React, { useState } from 'react';
 import Square from './Square';
-import { useEffect } from 'react/cjs/react.development';
+// import { useEffect } from 'react/cjs/react.development';
 
 function App() {
-  const winArea = document.getElementById('win');
+  // const winArea = document.getElementById('win');
   const bottomTextArea = document.getElementById('click-or-tap');
-  console.log('bottomTextArea', bottomTextArea);
+  // console.log('bottomTextArea', bottomTextArea);
   const blankBoardArray = [];
   for (let i = 0; i < 9; i += 1) {
     blankBoardArray.push('');
@@ -46,20 +46,15 @@ function App() {
     />)
   }
 
-  useEffect(() => {
-    if (numOfMoves === 9 || gameWon === true) { // this is essentially 'game complete'
-      bottomTextArea.textContent = 'Click or tap \'Clear\' to start a new game!'
-      // 1. disable all boxes handlers even if they are blank
-    }
-    if (numOfMoves === 9 && gameWon === false) {
-      winArea.textContent = 'It\'s a draw';
-    };
-  }, [bottomTextArea, gameWon, numOfMoves, winArea]);
+  // useEffect(() => {
+  //   if (numOfMoves === 9 || gameWon === true) { // this is essentially 'game complete'
+  //     // 1. disable all boxes handlers even if they are blank
+  //   }
+  // }, [bottomTextArea, gameWon, numOfMoves, winArea]);
 
   const handleClear = () => {
     setClearBoard(true);
-    winArea.textContent = '';
-    bottomTextArea.textContent = 'Click or tap on the above board to play a move!';
+    setNumOfMoves(0);
   }
 
   return (
@@ -70,11 +65,22 @@ function App() {
         <div className='board-main'>
           <div className='board'>
            {squares.map((square) => square)}
-           {console.log('this is the squares', squares)}
           </div>
         </div>
         <div className='board-right'>
-          <p id='win'></p>
+          <p id='win'>
+            {
+              (
+                numOfMoves === 9 || gameWon === true
+                ? numOfMoves === 9 && gameWon === false
+                  ? 'it\'s a draw!'
+                  : gameWon
+                    ? `${whichTurn === 'O' ? 'X' : 'O'} wins!`
+                    : ''
+                : ''
+              )
+            }
+          </p>
         </div>
       </div>
       <div className='instruction-area'>
@@ -87,7 +93,13 @@ function App() {
         </div>
       </div>
       <p className='under-text' id='click-or-tap'>
-        Click or tap on the above board to play a move!
+        {
+          (
+            numOfMoves === 9 || gameWon
+            ? 'Click or tap clear to start a new game!'
+            : 'Click or tap on the above board to play a move!'
+          )
+        }
       </p>
     </div>
   );
