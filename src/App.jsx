@@ -4,6 +4,8 @@ import Square from './Square';
 // import { useEffect } from 'react/cjs/react.development';
 
 function App() {
+  const rowsArray = [0, 0, 0];
+  const columnsArray = [0, 0, 0];
   // const winArea = document.getElementById('win');
   const bottomTextArea = document.getElementById('click-or-tap');
   // console.log('bottomTextArea', bottomTextArea);
@@ -11,6 +13,10 @@ function App() {
   for (let i = 0; i < 9; i += 1) {
     blankBoardArray.push('');
   }
+  const threeZeroArr = [0, 0, 0];
+
+  const [ rows, setRows ] = useState(threeZeroArr); // use later
+  const [ columns, setColumn ] = useState(threeZeroArr); // use later
   const [ numOfMoves, setNumOfMoves ] = useState(0);
   const [ gameWon, setGameWon ] = useState(false);
   const [ whichTurn, setWhichTurn ] = useState('O');
@@ -21,11 +27,20 @@ function App() {
   //   '', '', '',
   //   '', '', '' ]
 
-  const checkWin = () => {
-    const rows = [0, 0, 0];          //* Individual indexes represent entire row
-    const columns = [0, 0, 0];       //** " " column
-    const rightDiagonal = [0, 0, 0]; //*** Diagonal indexes represent
-    const leftDiagonal = [0, 0, 0];  //    INDIVIDUAL BOXES
+  const checkWin = (coordinates) => { // [0, 0] // 'O' adds 1, 'X' subtracts 1
+    console.log('coordinates', coordinates);
+    const rowPosition = coordinates[0];
+    const columnPosition = coordinates[1];
+    rowsArray[rowPosition] = whichTurn === 'X' ? rowsArray[rowPosition] += 1 : rowsArray[rowPosition] -= 1;
+    columnsArray[columnPosition] = whichTurn === 'X' ? columnsArray[columnPosition] += 1 : columnsArray[columnPosition] -= 1;
+    console.log('rowsArray', rowsArray, 'columnsArray', columnsArray);
+    for (let i = 0; i < rowsArray.length; i += 1) {
+      const rowNum = rowsArray[i];
+      const columnNum = columnsArray[i];
+      if (rowNum === 3 || rowNum === -3 || columnNum === 3 || columnNum === -3) {
+        setGameWon(true);
+      }
+    }
   };
 
   const squares = [];
@@ -71,12 +86,10 @@ function App() {
           <p id='win'>
             {
               (
-                numOfMoves === 9 || gameWon === true
-                ? numOfMoves === 9 && gameWon === false
-                  ? 'it\'s a draw!'
-                  : gameWon
-                    ? `${whichTurn === 'O' ? 'X' : 'O'} wins!`
-                    : ''
+                numOfMoves === 9
+                ? gameWon === true
+                  ? `${whichTurn === 'O' ? 'X' : 'O'} wins.`
+                  :`It's a draw.`
                 : ''
               )
             }
