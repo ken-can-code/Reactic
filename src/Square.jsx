@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 
 const Square = (props) => {
   const {
+    coordinates,
+    checkWin,
+    gameWon,
     numOfMoves,
     setNumOfMoves,
     squaresContents,
@@ -12,7 +15,7 @@ const Square = (props) => {
   } = props;
 
   const handleClick = () => {
-    if (squaresContents[id] === '') {
+    if (squaresContents[id] === '' && gameWon === false) {
       setNumOfMoves(numOfMoves + 1);
       const { whichTurn, setWhichTurn } = props;
       const newSquaresContents = [];
@@ -25,6 +28,7 @@ const Square = (props) => {
       }
       setSquaresContents(newSquaresContents);
       setWhichTurn(whichTurn === 'O' ? 'X' : 'O');
+      checkWin(coordinates, id);
     }
   };
 

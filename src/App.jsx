@@ -1,31 +1,73 @@
 import './App.css';
 import React, { useState } from 'react';
 import Square from './Square';
-import { useEffect } from 'react/cjs/react.development';
 
 function App() {
-  const winArea = document.getElementById('win');
-  const bottomTextArea = document.getElementById('click-or-tap');
-  console.log('bottomTextArea', bottomTextArea);
+  // let winAreaMessage = ''; // trying to render dynamically 3 ways in return statement
+  const rightDiagArray = [0, 4, 8];
+  const leftDiagArray = [6, 4, 2]
   const blankBoardArray = [];
   for (let i = 0; i < 9; i += 1) {
     blankBoardArray.push('');
   }
+  const threeZeroArray = [0, 0, 0];
+  const [ rows, setRows ] = useState(threeZeroArray);
+  const [ columns, setColumns ] = useState(threeZeroArray);
+  const [ rightDiagonal, setRightDiagonal ] = useState(rightDiagArray);
+  const [ leftDiagonal, setLeftDiagonal ] = useState(leftDiagArray);
   const [ numOfMoves, setNumOfMoves ] = useState(0);
   const [ gameWon, setGameWon ] = useState(false);
-  const [ whichTurn, setWhichTurn ] = useState('O');
+  const [ whichTurn, setWhichTurn ] = useState('X');
   const [ clearBoard, setClearBoard ] = useState(false);
   const [ squaresContents, setSquaresContents ] = useState(blankBoardArray);
-  // initially, squaresContents === 
-  // [ '', '', '',
-  //   '', '', '',
-  //   '', '', '' ]
 
-  const checkWin = () => {
-    const rows = [0, 0, 0];          //* Individual indexes represent entire row
-    const columns = [0, 0, 0];       //** " " column
-    const rightDiagonal = [0, 0, 0]; //*** Diagonal indexes represent
-    const leftDiagonal = [0, 0, 0];  //    INDIVIDUAL BOXES
+  const checkWin = (coordinates, id) => {
+    setRows(rows.map((row, i) => {
+      if (coordinates[0] === i) {
+        whichTurn === 'X' ? row += 1 : row -= 1;
+        if (row === 3 || row === -3) {
+          setGameWon(true);
+        }
+        return row;
+      }
+      return row
+    }));
+    setColumns(columns.map((column, i) => {
+      if (coordinates[1] === i) {
+        whichTurn === 'X' ? column += 1 : column -= 1;
+        if (column === 3 || column === -3) {
+          setGameWon(true);
+          return column;
+        }
+      }
+      return column;
+    }));
+    setRightDiagonal(rightDiagonal.map((position) => {
+      if (position === id) {
+        whichTurn === 'X' ? position = 'O' : position = 'X';
+        // console.log('id:', id, 'position:', position, 'rightDiagnal', rightDiagonal)
+        if (rightDiagonal[0] === rightDiagonal[1]
+          && rightDiagonal[1] === rightDiagonal[2]) {
+          setGameWon(true);
+        }
+        return position;
+      }
+      return position;
+    }));
+    setLeftDiagonal(leftDiagonal.map((position) => {
+      if (position === id) {
+        whichTurn === 'X' ? position = 'O' : position = 'X';
+        console.log('id:', id, 'position:', position, 'leftDiagnal', leftDiagonal)
+
+        if (leftDiagonal[0] === leftDiagonal[1]
+          && leftDiagonal[1] === leftDiagonal[2]) {
+            console.log('left diag win!');
+          setGameWon(true);
+        }
+        return position;
+      }
+      return position;
+    }));
   };
 
   const squares = [];
@@ -33,6 +75,7 @@ function App() {
     squares.push(<Square
       key={i}
       id={i}
+      checkWin={checkWin}
       coordinates={[Math.floor(i / 3), (i % 3)]}
       numOfMoves={numOfMoves}
       setNumOfMoves={setNumOfMoves}
@@ -42,24 +85,23 @@ function App() {
       setClearBoard={setClearBoard}
       whichTurn={whichTurn}
       setWhichTurn={setWhichTurn}
-      checkWin={checkWin}
+      gameWon={gameWon}
     />)
   }
 
-  useEffect(() => {
-    if (numOfMoves === 9 || gameWon === true) { // this is essentially 'game complete'
-      bottomTextArea.textContent = 'Click or tap \'Clear\' to start a new game!'
-      // 1. disable all boxes handlers even if they are blank
-    }
-    if (numOfMoves === 9 && gameWon === false) {
-      winArea.textContent = 'It\'s a draw';
-    };
-  }, [bottomTextArea, gameWon, numOfMoves, winArea]);
+  // useEffect(() => {
+    // if (numOfMoves === 9 && gameWon === false) { trying to not need this
+    //   Disable all square click handlers more elegantly using state?
+    // };
+  // }, [gameWon, numOfMoves]);
 
   const handleClear = () => {
     setClearBoard(true);
-    winArea.textContent = '';
-    bottomTextArea.textContent = 'Click or tap on the above board to play a move!';
+    setGameWon(false);
+    setRows(threeZeroArray);
+    setColumns(threeZeroArray);
+    setRightDiagonal(rightDiagArray);
+    setLeftDiagonal(leftDiagArray);
   }
 
   return (
@@ -70,11 +112,16 @@ function App() {
         <div className='board-main'>
           <div className='board'>
            {squares.map((square) => square)}
-           {console.log('this is the squares', squares)}
           </div>
         </div>
         <div className='board-right'>
-          <p id='win'></p>
+          <p id='win'>{(
+            gameWon === false && numOfMoves === 9
+            ? 'It\'s a draw!'
+            : gameWon
+              ? `${whichTurn === 'O' ? 'X' : 'O'} wins!`
+              : ''
+          )}</p>
         </div>
       </div>
       <div className='instruction-area'>
@@ -87,7 +134,10 @@ function App() {
         </div>
       </div>
       <p className='under-text' id='click-or-tap'>
-        Click or tap on the above board to play a move!
+        { ( gameWon || numOfMoves === 9
+          ? 'Click or tap \'Clear\' to start a new game!'
+          : 'Click or tap on the above board to play a move!'
+        )}
       </p>
     </div>
   );
