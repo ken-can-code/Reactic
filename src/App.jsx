@@ -32,17 +32,23 @@ function App() {
     console.log('rows before', rows, 'columns before', columns);
     setRows(rows.map((row, i) => {
       if (rowPosition === i) {
-        return whichTurn === 'O' ? row + 1 : row - 1; 
-      } else {
+        whichTurn === 'O' ? row += 1 : row -= 1; 
+        if (row === 3 || row === -3) {
+          setGameWon(true);
+        }
         return row;
       }
+      return row
     }));
     setColumns(columns.map((column, i) => {
-      if (columnPosition === i) {
-        return whichTurn === 'O' ? column + 1 : column - 1; 
-      } else {
+      if (rowPosition === i) {
+        whichTurn === 'O' ? column += 1 : column -= 1; 
+        if (column === 3 || column === -3) {
+          setGameWon(true);
+        }
         return column;
       }
+      return column;
     }));
     console.log('rows after', rows, 'columns after', columns);
     for (let i = 0; i < rows.length; i += 1) {
