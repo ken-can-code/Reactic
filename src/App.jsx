@@ -4,10 +4,7 @@ import Square from './Square';
 // import { useEffect } from 'react/cjs/react.development';
 
 function App() {
-  const rowsArray = [0, 0, 0];
-  const columnsArray = [0, 0, 0];
   // const winArea = document.getElementById('win');
-  const bottomTextArea = document.getElementById('click-or-tap');
   // console.log('bottomTextArea', bottomTextArea);
   const blankBoardArray = [];
   for (let i = 0; i < 9; i += 1) {
@@ -15,8 +12,8 @@ function App() {
   }
   const threeZeroArr = [0, 0, 0];
 
-  const [ rows, setRows ] = useState(threeZeroArr); // use later
-  const [ columns, setColumn ] = useState(threeZeroArr); // use later
+  const [ rows, setRows ] = useState(threeZeroArr);
+  const [ columns, setColumns ] = useState(threeZeroArr);
   const [ numOfMoves, setNumOfMoves ] = useState(0);
   const [ gameWon, setGameWon ] = useState(false);
   const [ whichTurn, setWhichTurn ] = useState('O');
@@ -31,12 +28,26 @@ function App() {
     console.log('coordinates', coordinates);
     const rowPosition = coordinates[0];
     const columnPosition = coordinates[1];
-    rowsArray[rowPosition] = whichTurn === 'X' ? rowsArray[rowPosition] += 1 : rowsArray[rowPosition] -= 1;
-    columnsArray[columnPosition] = whichTurn === 'X' ? columnsArray[columnPosition] += 1 : columnsArray[columnPosition] -= 1;
-    console.log('rowsArray', rowsArray, 'columnsArray', columnsArray);
-    for (let i = 0; i < rowsArray.length; i += 1) {
-      const rowNum = rowsArray[i];
-      const columnNum = columnsArray[i];
+    // [0, 0, 0] < 'rows' state and 'columns' state
+    console.log('rows before', rows, 'columns before', columns);
+    setRows(rows.map((row, i) => {
+      if (rowPosition === i) {
+        return whichTurn === 'O' ? row + 1 : row - 1; 
+      } else {
+        return row;
+      }
+    }));
+    setColumns(columns.map((column, i) => {
+      if (columnPosition === i) {
+        return whichTurn === 'O' ? column + 1 : column - 1; 
+      } else {
+        return column;
+      }
+    }));
+    console.log('rows after', rows, 'columns after', columns);
+    for (let i = 0; i < rows.length; i += 1) {
+      const rowNum = rows[i];
+      const columnNum = columns[i];
       if (rowNum === 3 || rowNum === -3 || columnNum === 3 || columnNum === -3) {
         setGameWon(true);
       }
