@@ -1,10 +1,8 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Square from './Square';
-// import { useEffect } from 'react/cjs/react.development';
 
 function App() {
-  // const winArea = document.getElementById('win');
   // console.log('bottomTextArea', bottomTextArea);
   const blankBoardArray = [];
   for (let i = 0; i < 9; i += 1) {
@@ -14,22 +12,20 @@ function App() {
 
   const [ rows, setRows ] = useState(threeZeroArr);
   const [ columns, setColumns ] = useState(threeZeroArr);
+  const [ rightDiagonal, setRightDiagonal ] = useState(threeZeroArr);
+  const [ leftDiagonal, setLeftDiagonal ] = useState(threeZeroArr);
   const [ numOfMoves, setNumOfMoves ] = useState(0);
   const [ gameWon, setGameWon ] = useState(false);
   const [ whichTurn, setWhichTurn ] = useState('O');
   const [ clearBoard, setClearBoard ] = useState(false);
   const [ squaresContents, setSquaresContents ] = useState(blankBoardArray);
-  // initially, squaresContents === 
-  // [ '', '', '',
-  //   '', '', '',
-  //   '', '', '' ]
 
-  const checkWin = (coordinates) => { // [0, 0] // 'O' adds 1, 'X' subtracts 1
-    console.log('coordinates', coordinates);
+  const checkWin = (coordinates, id) => { // [2, 2] // 'O' adds 1, 'X' subtracts 1
+    // console.log('coordinates', coordinates);
     const rowPosition = coordinates[0];
     const columnPosition = coordinates[1];
     // [0, 0, 0] < 'rows' state and 'columns' state
-    console.log('rows before', rows, 'columns before', columns);
+    // console.log('rows before', rows, 'columns before', columns);
     setRows(rows.map((row, i) => {
       if (rowPosition === i) {
         whichTurn === 'O' ? row += 1 : row -= 1; 
@@ -41,7 +37,7 @@ function App() {
       return row
     }));
     setColumns(columns.map((column, i) => {
-      if (rowPosition === i) {
+      if (columnPosition === i) {
         whichTurn === 'O' ? column += 1 : column -= 1; 
         if (column === 3 || column === -3) {
           setGameWon(true);
@@ -50,15 +46,60 @@ function App() {
       }
       return column;
     }));
-    console.log('rows after', rows, 'columns after', columns);
-    for (let i = 0; i < rows.length; i += 1) {
-      const rowNum = rows[i];
-      const columnNum = columns[i];
-      if (rowNum === 3 || rowNum === -3 || columnNum === 3 || columnNum === -3) {
+    setRightDiagonal(rightDiagonal.map((position, i) => {
+      if (id === 0 && i === 0) {
+        return whichTurn === 'O' ? position + 1 : position - 1;
+      }
+      if (id === 4 && i === 1) {
+        return whichTurn === 'O' ? position + 1 : position - 1;
+      }
+      if (id === 8 && i === 2) {
+        return whichTurn === 'O' ? position + 1 : position - 1;
+      }
+      return position;
+    }));
+    setLeftDiagonal(leftDiagonal.map((position, i) => {
+      if (id === 6 && i === 0) {
+        return whichTurn === 'O' ? position + 1 : position - 1;
+      }
+      if (id === 4 && i === 1) {
+        return whichTurn === 'O' ? position + 1 : position - 1;
+      }
+      if (id === 2 && i === 2) {
+        return whichTurn === 'O' ? position + 1 : position - 1;
+      }
+      return position;
+    }));
+    console.log('numOfMoves before if statement', numOfMoves);
+    console.log('numOfMoves after if statement', numOfMoves);
+    // console.log('rows after', rows, 'columns after', columns);
+  };
+
+  useEffect(() => {
+    if (numOfMoves >= 5) {
+      let sum = 0;
+      rightDiagonal.forEach((num) => {
+        sum += num;
+      });
+      console.log('sum', sum);
+      if (sum === 3 || sum === -3) {
+        console.log('someone won dude');
         setGameWon(true);
       }
+      sum = 0;
     }
-  };
+    
+    if (numOfMoves >= 5) {
+      let sum = 0;
+      leftDiagonal.forEach((num) => {
+        sum += num;
+      });
+      if (sum === 3 || sum === -3) {
+        setGameWon(true);
+      }
+      sum = 0;
+    }
+  }, [leftDiagonal, numOfMoves, rightDiagonal]);
 
   const squares = [];
   for (let i = 0; i < 9; i += 1) {
@@ -78,15 +119,14 @@ function App() {
     />)
   }
 
-  // useEffect(() => {
-  //   if (numOfMoves === 9 || gameWon === true) { // this is essentially 'game complete'
-  //     // 1. disable all boxes handlers even if they are blank
-  //   }
-  // }, [bottomTextArea, gameWon, numOfMoves, winArea]);
-
   const handleClear = () => {
     setClearBoard(true);
     setNumOfMoves(0);
+    setRows(threeZeroArr);
+    setColumns(threeZeroArr);
+    setGameWon(false);
+    setRightDiagonal(threeZeroArr);
+    setLeftDiagonal(threeZeroArr);
   }
 
   return (
@@ -103,10 +143,14 @@ function App() {
           <p id='win'>
             {
               (
-                numOfMoves === 9
-                ? gameWon === true
-                  ? `${whichTurn === 'O' ? 'X' : 'O'} wins.`
-                  :`It's a draw.`
+                numOfMoves >= 5
+                  ? gameWon === true
+                    ? `${whichTurn === 'X'
+                      ? 'O'
+                      : 'X'} wins.`
+                    : numOfMoves === 9
+                      ? `It's a draw.`
+                      : ''
                 : ''
               )
             }

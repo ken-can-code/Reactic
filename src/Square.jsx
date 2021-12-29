@@ -25,7 +25,7 @@ const Square = (props) => {
           newSquaresContents.push(squaresContents[i]);
         }
       }
-      checkWin(coordinates);
+      checkWin(coordinates, id);
       setSquaresContents(newSquaresContents);
       setWhichTurn(whichTurn === 'O' ? 'X' : 'O');
     }
